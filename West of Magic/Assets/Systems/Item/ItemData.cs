@@ -31,7 +31,7 @@ public class ItemData : ScriptableObject
             CoolDown = 0;
     }
 
-    public virtual bool Use()
+    public virtual bool Use(GameObject ItemUser)
     {
         Debug.Log("Item Used: " + ItemName);
         return true;
