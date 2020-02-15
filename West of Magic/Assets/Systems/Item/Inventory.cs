@@ -87,6 +87,33 @@ public class Inventory : MonoBehaviour
             return false;
     }
 
+    public int RestoreItem(int Uses = -1)
+    {
+        int CurentUses = Items[Selected].ItemUses;
+
+        if(Uses == -1)
+        {
+            Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
+        }
+        else
+        {
+            Items[Selected].ItemUses += Uses;
+
+            if (Items[Selected].ItemUses > Items[Selected].Item.GetMaxUses())
+                Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
+        }
+
+        return Items[Selected].ItemUses - CurentUses;
+    }
+
+    public ItemData Current()
+    {
+        if (Items.Count == 0)
+            return null;
+        else
+            return Items[Selected].Item;
+    }
+
     public ItemData Next()
     {
         if (Items.Count == 0)
