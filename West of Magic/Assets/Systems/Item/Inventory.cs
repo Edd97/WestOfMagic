@@ -58,7 +58,27 @@ public class Inventory : MonoBehaviour
             if (Items[Selected].Item.Use(gameObject))
             {
                 Items[Selected].ItemUses -= 1;
-                return true;
+
+                if (Items[Selected].ItemUses <= 0 && Items[Selected].Item.GetConsumeOnUse())
+                {
+                    Items[Selected].Stack -= 1;
+
+                    if (Items[Selected].Stack <= 0)
+                    {
+                        Items.RemoveAt(Selected);
+                        Selected -= 1;
+                        if (Selected < 0)
+                            Selected = Items.Count - 1;
+
+
+                    }
+                    else
+                        Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
+
+                    return true;
+                }
+                else
+                    return true;
             }
             else
                 return false;
