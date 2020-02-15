@@ -51,6 +51,22 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
+    public bool UseItem()
+    {
+        if (Items[Selected].ItemUses > 0)
+        {
+            if (Items[Selected].Item.Use(gameObject))
+            {
+                Items[Selected].ItemUses -= 1;
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+
     public ItemData Next()
     {
         if (Items.Count == 0)
