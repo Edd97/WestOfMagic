@@ -52,13 +52,13 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public bool UseItem()
+    public bool UseItem(GameObject User = null)
     {
         if (Items[Selected].ItemUses > 0)
         {
             if (Time.time - Items[Selected].LastUse < Items[Selected].Item.GetCoolDown())
             {
-                if (Items[Selected].Item.Use(gameObject))
+                if (Items[Selected].Item.Use(User == null ? gameObject : User))
                 {
                     Items[Selected].LastUse = Time.time;
 
@@ -76,8 +76,6 @@ public class Inventory : MonoBehaviour
                                 Selected -= 1;
                                 if (Selected < 0)
                                     Selected = Items.Count - 1;
-
-
                             }
                             else
                                 Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
