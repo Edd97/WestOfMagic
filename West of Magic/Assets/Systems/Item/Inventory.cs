@@ -42,6 +42,7 @@ public class Inventory : MonoBehaviour
         Temp.Item = NewItem;
         Temp.ItemUses = NewItem.GetMaxUses();
         Temp.LastUse = Time.time;
+        Temp.Stack = 1;
 
         Items.Add(Temp);
 
@@ -55,36 +56,39 @@ public class Inventory : MonoBehaviour
     {
         if (Items[Selected].ItemUses > 0)
         {
-            if (Items[Selected].Item.Use(gameObject))
+            if (Time.time - Items[Selected].LastUse < Items[Selected].Item.GetCoolDown())
             {
-                Items[Selected].ItemUses -= 1;
-
-                if (Items[Selected].ItemUses <= 0 && Items[Selected].Item.GetConsumeOnUse())
+                if (Items[Selected].Item.Use(gameObject))
                 {
-                    Items[Selected].Stack -= 1;
+                    Items[Selected].LastUse = Time.time;
 
-                    if (Items[Selected].Stack <= 0)
+                    if (Items[Selected].Item.GetMaxUses() > 0)
                     {
-                        Items.RemoveAt(Selected);
-                        Selected -= 1;
-                        if (Selected < 0)
-                            Selected = Items.Count - 1;
+                        Items[Selected].ItemUses -= 1;
+
+                        if (Items[Selected].ItemUses <= 0 && Items[Selected].Item.GetConsumeOnUse())
+                        {
+                            Items[Selected].Stack -= 1;
+
+                            if (Items[Selected].Stack <= 0)
+                            {
+                                Items.RemoveAt(Selected);
+                                Selected -= 1;
+                                if (Selected < 0)
+                                    Selected = Items.Count - 1;
 
 
+                            }
+                            else
+                                Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
+                        }
                     }
-                    else
-                        Items[Selected].ItemUses = Items[Selected].Item.GetMaxUses();
-
                     return true;
                 }
-                else
-                    return true;
             }
-            else
-                return false;
         }
-        else
-            return false;
+
+        return false;
     }
 
     public int RestoreItem(int Uses = -1)
